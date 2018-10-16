@@ -1,0 +1,17 @@
+{
+  "name": "express-authz",
+  "version": "1.0.0",
+  "description": "Authorization Middleware for Express.js",
+  "main": "authz.js",
+  "dependencies": {},
+  "devDependencies": {
+    "coveralls": "^3.0.2",
+    "jest": "^23.6.0"
+  },
+  "scripts": {
+    "test": "jest",
+    "coverage": "jest --coverage && cat ./coverage/lcov.info | coveralls"
+  },
+  "author": "Charles `sparticvs` Timko",
+  "license": "MIT"
+}

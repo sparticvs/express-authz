@@ -1,0 +1,16 @@
+sudo: false
+language: node_js
+node_js:
+    - "9"
+install:
+    - NODE_ENV=development npm install
+script:
+    - npm test
+    - npm run coveralls
+deploy:
+    provider: npm
+    email: "sparticvs@popebp.com"
+    api_key: "AUTH_TOKEN!"
+    on:
+        tags: true
+    tag: next
