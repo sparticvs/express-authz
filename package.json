@@ -10,7 +10,8 @@
   },
   "scripts": {
     "test": "jest",
-    "coverage": "jest --coverage && cat ./coverage/lcov.info | coveralls"
+    "coveralls": "jest --coverage && cat ./coverage/lcov.info | coveralls",
+    "coverage": "jest --coverage"
   },
   "author": "Charles `sparticvs` Timko",
   "license": "MIT"
