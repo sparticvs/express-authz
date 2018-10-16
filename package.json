@@ -10,7 +10,7 @@
   },
   "scripts": {
     "test": "jest",
-    "coveralls": "jest --coverage && cat ./coverage/lcov.info | coveralls",
+    "coveralls": "jest --coverage --coverageReporters=text-lcov | coveralls",
     "coverage": "jest --coverage"
   },
   "author": "Charles `sparticvs` Timko",
