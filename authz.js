@@ -36,11 +36,23 @@ function parseEntitlementsString(ents) {
     }
 }
 
+
+
+// FIXME EntitlementsConnector might be a more accurate name for this class
 class Authz {
+
     constructor(config) {
         this.config = config;
 
         // TODO check the configuration has the minimum legal parameters
+        
+        this.connector = {
+            'json': {
+                getEntitlements: this._getJsonEntitlements.bind(this),
+                insertEntitlement: this._insertJsonEntitlement.bind(this),
+                removeEntitlement: this._removeJsonEntitlement.bind(this)
+            },
+        };
     }
 
     _getJsonEntitlements(user) {
@@ -51,12 +63,29 @@ class Authz {
         }
     }
 
-    getEntitlements(user) {
-        if(this.config.db.type === 'json') {
-            return this._getJsonEntitlements(user);
+    _insertJsonEntitlement(user, entitlement) {
+        if(!(entitlement in this.config.db.instance[user])) {
+            this.config.db.instance[user].push(entitlement);
         }
+    }
 
-        throw new Error("Unsupported Database Type");
+    _removeJsonEntitlement(user, entitlement) {
+    }
+
+
+    /**
+     * Should return an Array of entitlements in the entitlement format
+     */
+    getEntitlements(user) {
+        return this.connector[this.config.db.type].getEntitlements(user);
+    }
+
+    insertEntitlement(user, entitlement) {
+        return this.connector[this.config.db.type].insertEntitlement(user, entitlement);
+    }
+
+    removeEntitlement(user, entitlement) {
+        return this.connector[this.config.db.type].removeEntitlement(user, entitlement);
     }
 
 }
@@ -79,66 +108,97 @@ function authz(config) {
 // prevent extra testing during runtime, and only during compiling. This should
 // also make testing the "jest" way easier.
 authz.needs = function(entitlements) {
-        return function(req, res, next) {
-            let userEnts = null;
-            let epEnts = null;
-            if(typeof(req.session.user) === 'string' || req.session.user === undefined) {
-                userEnts = parseEntitlementsString(_authz.getEntitlements(req.session.user));
-            } else {
-                throw 'Authenticated User is not a String. Are you using express-authn?';
-            }
+    if(null === _authz) {
+        throw new Error('express-authz was not initialized yet. make sure to call `authz()`');
+    }
 
-            if(typeof(entitlements) === 'string' || Array.isArray(entitlements)) {
-                epEnts = parseEntitlementsString(entitlements);
-            } else {
-                if(entitlements === undefined) {
-                    return next();
-                }
-                throw 'Entitlments for the "needs" are the incorrect data type.';
-            }
+    return function(req, res, next) {
+        let userEnts = null;
+        let epEnts = null;
+        if(typeof(req.session.user) === 'string' || req.session.user === undefined) {
+            userEnts = parseEntitlementsString(_authz.getEntitlements(req.session.user));
+        } else {
+            throw 'Authenticated User is not a String. Are you using express-authn?';
+        }
 
-            let result = true;
-            // For each required entitlement, the user must have it
-            Object.keys(epEnts).map(function(entitlement) {
-                // This doesn't ultimately work... each item in the array needs to
-                // be checked
-                if(Array.isArray(userEnts[entitlement])) {
-                    if(userEnts[entitlement].includes('*')) {
-                        result &= true;
-                    } else {
-                        epEnts[entitlement].map(function(epEnt) {
-                            result &= userEnts[entitlement].includes(epEnt);
-                        });
-                    }
-                } else {
-                    result = false;
-                }
-            });
-
-            if(result) {
+        // TODO This can be move outside this anon function
+        if(typeof(entitlements) === 'string' || Array.isArray(entitlements)) {
+            epEnts = parseEntitlementsString(entitlements);
+        } else {
+            if(entitlements === undefined) {
                 return next();
-            } else {
-                return res.status(401).send('Unauthorized').end();
             }
-        };
+            throw 'Entitlments for the "needs" are the incorrect data type.';
+        }
+
+        let result = true;
+        // For each required entitlement, the user must have it
+        Object.keys(epEnts).map(function(entitlement) {
+            // This doesn't ultimately work... each item in the array needs to
+            // be checked
+            if(Array.isArray(userEnts[entitlement])) {
+                if(userEnts[entitlement].includes('*')) {
+                    result &= true;
+                } else {
+                    epEnts[entitlement].map(function(epEnt) {
+                        result &= userEnts[entitlement].includes(epEnt);
+                    });
+                }
+            } else {
+                result = false;
+            }
+        });
+
+        if(result) {
+            return next();
+        } else {
+            return res.status(401).send('Unauthorized').end();
+        }
+    };
 }
 
 authz.grant = function(user, entitlements) {
+    if(null === _authz) {
+        throw new Error('express-authz was not initialized yet. make sure to call `authz()`');
+    }
+
+    // 1. Validate the argument types are expected
+    // 2. Return a Promise to execute the Authz.grant
 }
 
 authz.revoke = function(user, entitlements) {
+    if(null === _authz) {
+        throw new Error('express-authz was not initialized yet. make sure to call `authz()`');
+    }
+
 }
 
 authz.revokeNow = function(user, entitlements) {
+    if(null === _authz) {
+        throw new Error('express-authz was not initialized yet. make sure to call `authz()`');
+    }
+
 }
 
 authz.temp = function(user, timeout, entitlements) {
+    if(null === _authz) {
+        throw new Error('express-authz was not initialized yet. make sure to call `authz()`');
+    }
+
 }
 
 authz.expire = function(user) {
+    if(null === _authz) {
+        throw new Error('express-authz was not initialized yet. make sure to call `authz()`');
+    }
+
 }
 
 authz.expireNow = function(user) {
+    if(null === _authz) {
+        throw new Error('express-authz was not initialized yet. make sure to call `authz()`');
+    }
+
 }
 
 module.exports = authz;
