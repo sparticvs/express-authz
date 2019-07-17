@@ -15,7 +15,7 @@ express.js-based implementations.
 ## dependencies
 
 currently this is minimal, but will eventually include sequelize and other
-orms as folks complain abotu their system...
+orms as folks complain about their system...
 
 ## role-based access controls
 
