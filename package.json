@@ -3,10 +3,9 @@
   "version": "1.0.0",
   "description": "Authorization Middleware for Express.js",
   "main": "authz.js",
-  "dependencies": {},
   "devDependencies": {
-    "coveralls": "^3.0.2",
-    "jest": "^24.8.0"
+    "coveralls": "^3.1.1",
+    "jest": "^24.9.0"
   },
   "scripts": {
     "test": "jest",
