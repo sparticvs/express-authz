@@ -39,7 +39,7 @@ sparticvs@popebp.com using the pgp public key in the section at the end.
 do not supply any binaries, the entire report will be ignored.
 
 ## pgp public key
-
+```
 -----BEGIN PGP PUBLIC KEY BLOCK-----
 
 mQSuBFRAMQ8RDACnZLZP7bKsBN23kOLiqNil3sQJLDCMCk55tkLMoS/yZJCmLsf2
@@ -92,3 +92,4 @@ Q86+o1Mt0z8vmA7sk0zQrwD/TqgC8DKb3uyxaP4CVRasZRY5+6ZiL1VwVvrnbgXX
 LJA=
 =651d
 -----END PGP PUBLIC KEY BLOCK-----
+```
