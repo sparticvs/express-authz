@@ -5,7 +5,7 @@
   "main": "authz.js",
   "devDependencies": {
     "coveralls": "3.1.1",
-    "jest": "29.7.0"
+    "jest": "30.2.0"
   },
   "scripts": {
     "test": "jest",
